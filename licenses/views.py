@@ -13,8 +13,6 @@ logger = logging.getLogger(__name__)
 def verify_api_key(request):
     """Xác thực API key từ request"""
     client_key = request.headers.get('X-API-Key') or request.GET.get('api_key')
-    client_key = hashlib.sha256(client_key.encode('utf-8'))
-    client_key = client_key.hexdigest()
     server_key = settings.API_KEY 
 
 
