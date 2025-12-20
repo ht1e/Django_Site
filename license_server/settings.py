@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -127,7 +126,7 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # API Configuration
-API_KEY = config('API_KEY', default='')
+API_KEY = os.environ.get('API_KEY', default='1d02f6336115fa0adb5875cf8c3ee9cad33778d1fba0567631654abc0db9f80c')
 if not API_KEY:
     raise ValueError("API_KEY must be set in .env file or environment variable")
 # CORS Configuration (nếu cần cho frontend)
