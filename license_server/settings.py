@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-u2155mq5@6$rg+ca=my6ca1&zr=evtjl)ur$28o6*8-b9o7!r@
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-DEBUG = True
+DEBUG = False
 
 # ALLOWED_HOSTS - Giới hạn domains được phép
 ALLOWED_HOSTS = ['tailungdev.pythonanywhere.com', 'localhost','127.0.0.1']
