@@ -106,17 +106,17 @@ def verify_license(request):
             }, status=200)
         
         # Kiểm tra ngày hết hạn
-        today = timezone.now().date()
-        if license_obj.expiration_date < today:
-            return JsonResponse({
-                'success': False,
-                'valid': False,
-                'error': 'License expired',
-                'message': 'License đã hết hạn',
-                'license_key': license_key,
-                'expiration_date': license_obj.expiration_date.isoformat(),
-                'current_date': today.isoformat()
-            }, status=200)
+        # today = timezone.now().date()
+        # if license_obj.expiration_date < today:
+        #     return JsonResponse({
+        #         'success': False,
+        #         'valid': False,
+        #         'error': 'License expired',
+        #         'message': 'License đã hết hạn',
+        #         'license_key': license_key,
+        #         'expiration_date': license_obj.expiration_date.isoformat(),
+        #         'current_date': today.isoformat()
+        #     }, status=200)
         
         # Kiểm tra hardware_id nếu được cung cấp
         if hardware_id:
@@ -150,7 +150,7 @@ def verify_license(request):
             'message': 'License hợp lệ',
             'license_key': license_key,
             'status': license_obj.status,
-            'expiration_date': license_obj.expiration_date.isoformat(),
+            # 'expiration_date': license_obj.expiration_date.isoformat(),
             # 'hardware_id': license_obj.hardware_id or hardware_id,
             'created_at': license_obj.created_at.isoformat()
         }, status=200)
