@@ -28,7 +28,7 @@ SECRET_KEY = "django-insecure-u2155mq5@6$rg+ca=my6ca1&zr=evtjl)ur$28o6*8-b9o7!r@
 DEBUG = True
 
 # ALLOWED_HOSTS - Giới hạn domains được phép
-ALLOWED_HOSTS = ['localhost','127.0.0.1']
+ALLOWED_HOSTS = ['tailungdev.pythonanywhere.com', 'localhost','127.0.0.1']
 
 
 # Application definition
