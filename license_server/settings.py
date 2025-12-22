@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-u2155mq5@6$rg+ca=my6ca1&zr=evtjl)ur$28o6*8-b9o7!r@"
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
@@ -126,7 +130,7 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # API Configuration
-API_KEY = "1d02f6336115fa0adb5875cf8c3ee9cad33778d1fba0567631654abc0db9f80c"
+API_KEY = os.getenv('API_KEY')
 if not API_KEY:
     raise ValueError("API_KEY must be set in .env file or environment variable")
 # CORS Configuration (nếu cần cho frontend)
