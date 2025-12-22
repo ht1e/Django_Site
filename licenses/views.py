@@ -13,16 +13,15 @@ logger = logging.getLogger(__name__)
 def verify_api_key(request):
     """Xác thực API key từ request"""
     client_key = request.headers.get('X-API-Key') or request.GET.get('api_key')
-    client_key = hashlib.sha256(client_key.encode('utf-8'))
-    client_key = client_key.hexdigest()
     server_key = settings.API_KEY 
 
 
     return client_key == server_key
 
 @csrf_exempt  # Bỏ qua CSRF token (cần cho API public)
-@require_http_methods(["GET", "POST"])  # Chỉ cho phép GET và POST
+@require_http_methods(["POST","GET"])  # Chỉ cho phép GET và POST
 def verify_license(request):
+    print(request.method)
     """
     API endpoint để xác thực license key
     URL: /api/verify-license/
@@ -38,15 +37,21 @@ def verify_license(request):
     
     # Bước 2: Lấy dữ liệu từ request
     if request.method == 'POST':
+        # print("post1")
         # Kiểm tra Content-Type để xử lý đúng định dạng
-        content_type = request.META.get('CONTENT_TYPE', '').lower()  
+        content_type = request.META.get('CONTENT_TYPE', '').lower() 
+        # print("content_type:", content_type) 
         
         if 'application/json' in content_type:
             # Xử lý JSON
             try:
-                data = json.loads(request.body)
+                # print("request:",request.body.decode('utf-8'))
+                rq = request.body.decode('utf-8')
+                data = json.loads(rq)
+                # print("data:", data)
                 license_key = data.get('license_key')
                 hardware_id = data.get('hardware_id')
+                print("data:", license_key, hardware_id)
             except json.JSONDecodeError as e:
                 logger.warning(f"Invalid JSON in request: {str(e)}")
                 return JsonResponse({
@@ -59,6 +64,7 @@ def verify_license(request):
             license_key = request.POST.get('license_key')
             hardware_id = request.POST.get('hardware_id')
     else:  # GET request
+        # print("get")
         license_key = request.GET.get('license_key')
         hardware_id = request.GET.get('hardware_id')
     
@@ -76,6 +82,20 @@ def verify_license(request):
         
         # Kiểm tra trạng thái
         if license_obj.status != 'active':
+            #nếu license chưa có hardware_id  thì gán và kích hoạt 
+            if hardware_id:
+                license_obj.hardware_id = hardware_id
+                license_obj.status = 'active'
+                license_obj.save()
+                return JsonResponse({
+                    'success': True,
+                    'valid': True,
+                    'message': 'Kích hoạt thành công',
+                    'license_key': license_key,
+                    'provided_hardware_id': hardware_id
+                }, status=200)
+
+            #nếu license đã có hardware_id thì báo lỗi bị license không hoạt động
             return JsonResponse({
                 'success': False,
                 'valid': False,
@@ -110,19 +130,19 @@ def verify_license(request):
                     # 'expected_hardware_id': license_obj.hardware_id,
                     'provided_hardware_id': hardware_id
                 }, status=200)
-            elif not license_obj.hardware_id:
-                # Gán hardware_id nếu chưa có
-                license_obj.hardware_id = hardware_id
-                license_obj.save()
-                return JsonResponse({
-                    'success': True,
-                    'valid': False,
-                    # 'error': 'Hardware ID mismatch',
-                    'message': 'Kích hoạt thành công',
-                    'license_key': license_key,
-                    # 'expected_hardware_id': license_obj.hardware_id,
-                    'provided_hardware_id': hardware_id
-                }, status=200)
+            # elif not license_obj.hardware_id:
+            #     # Gán hardware_id nếu chưa có
+            #     license_obj.hardware_id = hardware_id
+            #     license_obj.save()
+            #     return JsonResponse({
+            #         'success': True,
+            #         'valid': False,
+            #         # 'error': 'Hardware ID mismatch',
+            #         'message': 'Kích hoạt thành công',
+            #         'license_key': license_key,
+            #         # 'expected_hardware_id': license_obj.hardware_id,
+            #         'provided_hardware_id': hardware_id
+            #     }, status=200)
         # License hợp lệ - trả về thành công
         return JsonResponse({
             'success': True,
