@@ -29,4 +29,4 @@ urlpatterns = [
     # acti""vate 
     # path("api/activate", views.activate_licences, name="activate_licences"),
     # path("api/info/", views.api_info, name="api_info"),
-]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]
