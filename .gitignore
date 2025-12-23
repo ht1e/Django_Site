@@ -54,3 +54,6 @@ Thumbs.db
 config.py
 local_settings.py
 
+
+# staticfiles
+staticfiles/
